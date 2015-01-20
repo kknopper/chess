@@ -4,6 +4,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var users = {};
+var usernames = [];
 app.use(express.static(path.join(__dirname, 'public')));
 var url = 'room';
 
@@ -16,7 +17,7 @@ var nsp = io.of('/room');
 // app.use(express.static(__dirname + '/'));
 // app.listen(process.env.PORT || 3000);
 
-nsp.on('connection', function(socket) {
+io.on('connection', function(socket) {
 	console.log('a user connected');
 
 	function updateUsernames() {
@@ -24,13 +25,19 @@ nsp.on('connection', function(socket) {
 	}
 
 	socket.on('updateUsers', function(usernameVal, callback){
-		if (usernameVal in users) {
+		if (usernames.indexOf(usernameVal)!= -1) {
+			console.log(usernameVal);
+			console.log(users);
 			callback(false);
 		}
 		else {
 			console.log(usernameVal);
+			console.log('false');
 			callback(true);
 			users[socket.id] = usernameVal;
+			socket.username = usernameVal
+			usernames.push(usernameVal);
+			console.log(users);
 
 			updateUsernames();
 			socket.broadcast.emit('userConnect', users[socket.id] +' connected');
@@ -39,8 +46,8 @@ nsp.on('connection', function(socket) {
 
 	socket.on('disconnect', function() {
 		console.log('a user disconnected');
-		if (!socket.id) return;
-		// users.splice(users.indexOf(users[socket.id]), 1);
+		if (!users[socket.id]) return;
+		usernamess.splice(usernames.indexOf(socket.username), 1);
 		delete users[socket.id];
 		updateUsernames();
 		io.emit('userDisconnect', users[socket.id] +' disconnected');

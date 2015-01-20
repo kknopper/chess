@@ -1,4 +1,4 @@
-var socket = io('/room'),
+var socket = io(),
 $chat = $('#chatForm'),
 $userForm = $('#userForm'),
 $user = $('#user'),
