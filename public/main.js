@@ -5,6 +5,8 @@ $user = $('#user'),
 $userList = $('.userList'),
 $content = $('#main');
 
+var room = location.pathname.slice(1);;
+
 // var playerTurn = 'w';
 $chat.submit(function(e){
 	e.preventDefault();
@@ -16,6 +18,8 @@ $chat.submit(function(e){
 
 $userForm.submit(function(e){
 	e.preventDefault();
+	room = location.pathname.slice(1);
+	socket.emit('join room', room);
 	socket.emit('updateUsers', $('#userName').val(), function(username) {
 		if (username) {
 			$user.hide();
@@ -25,6 +29,7 @@ $userForm.submit(function(e){
 			swal('Uh-oh', 'That username is already taken, try another one!', 'error')
 		}
 	});
+
 	$('#userName').val(''); 
 });
 
