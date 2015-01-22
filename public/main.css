@@ -51,12 +51,57 @@ form button {
 }
 
 #main {
-	visibility: hidden;
+	/*visibility: hidden;*/
 }
 
 #user {
-	position: absolute;
-	left: 50%;
-	bottom: 50%;
-	width: 350px;
+
+}
+
+nav {
+	background: #808080;
+}
+
+nav ul {
+	display: block;
+	text-align: center;
+	margin-top: 0;
+}
+
+nav ul li {
+	display: inline-block;
+	padding: 10px;
+}
+
+.nav a {
+	color: #FFF !important;
+	text-decoration: none;
+}
+
+.nav a:hover {
+	text-decoration: none;
+}
+
+.logo {
+	display: block;
+	margin: 0 auto;
+	width: 100%;
+	max-width: 350px;
+}
+
+h1 {
+	text-align: center;
+}
+
+.button-wrap {
+	text-align: center;
+	margin: 0 auto;
+}
+
+.pure-button.button-primary {
+	color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: rgb(66, 184, 221);
+    
 }

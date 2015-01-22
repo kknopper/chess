@@ -17,17 +17,17 @@
         <!-- https://github.com/audreyr/favicon-cheat-sheet -->
 
         <!-- feature detection -->
-        <!-- <script src="dist/js/detects.js"></script> -->
+        <script src="dist/js/detects.js"></script>
         
         <!-- favicon -->
         <link rel="shortcut icon" type="image/png" href="/img/favicon.ico"/>
 
         <!-- stylesheets -->
         
-        <link rel="stylesheet" href="main.css">
-        <link rel="stylesheet" href="sweet-alert.css">
-        <link rel="stylesheet" href="chessboard.css">
-        <link rel="stylesheet" href="kraken.min.css">
+        <link rel="stylesheet" href="../main.css">
+        <link rel="stylesheet" href="../sweet-alert.css">
+        <link rel="stylesheet" href="../chessboard.css">
+        <link rel="stylesheet" href="../kraken.min.css">
         <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
     </head>
 
@@ -49,20 +49,20 @@
             </ul>
         </nav>
 
-        <img class="logo" src="img/logo.png" alt="chess logo">
+        <!-- <img class="logo" src="img/logo.png" alt="chess logo">
         <h1>Wanna play a game?</h1>
         
         <div class="button-wrap">
-          <a href="/create" class="button-primary pure-button">Create a game</a>
-          <a href="#" class="button-primary pure-button"> Watch a game</a>
+          <button class="button-primary pure-button">Create a game</button>
+          <button class="button-primary pure-button"> Watch a game</button>
         </div>
 
-         <!-- <div id="user">
+         <div id="user">
             <h1>Enter a username:</h1>
             <form id="userForm" action="">
               <input id="userName" type="text"><button>Submit</button>
             </form>
-          </div>
+          </div> -->
           <main id="main">
             <div id="board"></div>
             <div class="userList"></div>
@@ -72,18 +72,18 @@
                 <input id="m" autocomplete="off" /><button>Send</button>
               </form>
             </div>
-          </main> -->
+          </main>
 
 
         <!-- Javascript -->
         <!-- In the footer for better performance -->
-        <script src="/socket.io/socket.io.js"></script>
+        <script src="../socket.io/socket.io.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-        <script src='jquery.throttleDebounce.js'></script>
-        <script src='sweet-alert.min.js'></script>
-        <!-- <script src='chess.js'></script>
-        <script src='chessboard.min.js'></script> -->
-        <script src='main.js'></script>
+        <script src='../jquery.throttleDebounce.js'></script>
+        <script src='../sweet-alert.min.js'></script>
+        <script src='../chess.js'></script>
+        <script src='../chessboard.min.js'></script>
+        <script src='../main.js'></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <!-- (Via HTML5 Boilerplate: http://html5boilerplate.com/) -->

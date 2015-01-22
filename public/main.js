@@ -189,3 +189,6 @@ socket.on('scrollChat', function() {
 	var newscrollHeight = $("#messages").prop("scrollHeight") - 25; //Scroll height after the request
 	$("#messages").animate({ scrollTop: newscrollHeight }, 'normal'); //Autoscroll to bottom of div
 });
+socket.on('joinError', function() {
+	swal('Error','This room is already full', 'error');
+});

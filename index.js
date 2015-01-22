@@ -26,14 +26,14 @@ app.get('/create', function (req, res) {
 	var newGame = createID();
 	games[newGame] = {};
 
-	res.redirect('/' + newGame);
+	res.redirect('/game/' + newGame);
 });
 
-app.get('/:gameID', function (req, res, next) {
+app.get('/game/:gameID', function (req, res, next) {
 	console.log(req.params);
 	var gameID = req.params.gameID;
 	//if (gameID.length !== 5) return res.send('Game ID not valid');
-	res.sendFile(__dirname + '/index.html');
+	res.sendFile(__dirname + '/game.html');
 });
 
 
@@ -55,6 +55,11 @@ io.on('connection', function(socket) {
 			console.log(users[socket.id], 'joined', room);
 		} else if (games[room] && games[room].length && games[room].length >= 2) {
 			console.log('too many people in the room');
+			var Error = io.of('/error').on('connection', function(){
+				socket.emit('testError', 'this is a test');
+				error.emit('testError2','this is another test');
+			});
+			// socket.to(socket.id).emit('joinError')
 		} else {
 			games[room] = [];
 			games[room].push(socket.id);
