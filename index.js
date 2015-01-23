@@ -36,6 +36,10 @@ app.get('/game/:gameID', function (req, res, next) {
 	res.sendFile(__dirname + '/game.html');
 });
 
+app.newGame = function(req, res) {
+	res.redirect('/create');
+}
+
 
 // app.use(express.static(__dirname + '/'));
 // app.listen(process.env.PORT || 3000);
@@ -47,12 +51,37 @@ io.on('connection', function(socket) {
 		io.emit('updateUsers', users);
 	}
 
-	socket.on('join room', function (room) {
+	socket.on('join room', function (room, usernameVal, callback) {
 		socket.room = room;
+		if (usernames.indexOf(usernameVal)!= -1) {
+			console.log(usernameVal);
+			console.log(users);
+			callback(false);
+		}
+		else {
+			console.log(usernameVal);
+			console.log('false');
+			callback(true);
+			users[socket.id] = usernameVal;
+			socket.username = usernameVal
+			usernames.push(usernameVal);
+			console.log(users);
+
+			updateUsernames();
+			socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
+		}
+
 		if (games[room] && games[room].length && games[room].length <= 1) {
 			games[room].push(socket.id);
 			socket.join(room);
 			console.log(users[socket.id], 'joined', room);
+			// var url = document.URL;
+			// url = window.location.replace(url+'/create');
+			app.put('/', function (req, res) {
+			  res.redirect('/create');
+			});
+
+			// app.newGame();
 		} else if (games[room] && games[room].length && games[room].length >= 2) {
 			console.log('too many people in the room');
 			var Error = io.of('/error').on('connection', function(){
@@ -65,6 +94,13 @@ io.on('connection', function(socket) {
 			games[room].push(socket.id);
 			socket.join(room);
 			console.log(users[socket.id], 'joined', room);
+			// var url = document.URL;
+			// url = window.location.replace(url+'/create');
+			// app.newGame();
+			app.put('/', function (req, res) {
+			  res.redirect('/create');
+			});
+
 		}
 	});
 

@@ -19,8 +19,7 @@ $chat.submit(function(e){
 $userForm.submit(function(e){
 	e.preventDefault();
 	room = location.pathname.slice(1);
-	socket.emit('join room', room);
-	socket.emit('updateUsers', $('#userName').val(), function(username) {
+	socket.emit('join room', room, $('#userName').val(), function(username) {
 		if (username) {
 			$user.hide();
 			$content.css('visibility','visible');
@@ -153,7 +152,11 @@ $(function() {
 	  	console.log(gamePosition);
 	  	game.load(gamePosition);
 	});
-});
+}); // end chess js
+
+$('#createButton').click(function(){
+	$('.modal').css('display', 'block');
+})
 
 
 

@@ -1,6 +1,11 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font: 13px Helvetica, Arial; }
 
+body { 
+	font: 13px Helvetica, Arial;
+	background: url('../img/transp_bg.png');
+	/*background: url('../img/checkered_pattern.png');*/
+	/*background: url('../img/crossword.png');*/
+}
 
 .chat {
 	width: 100%;
@@ -12,15 +17,8 @@ body { font: 13px Helvetica, Arial; }
 	height: 200px;
 }
 form { border: 1px solid black; bottom: 0; width: 100%; max-width: 350px; }
-form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+form input { border: 0; padding: 10px;  margin-right: .5%; }
 
-form button { 
-	background: rgb(130, 224, 255);
-	border: none;
-	padding: 10px;
-	position: absolute;
-	right: 0;
-}
 
 #messages { 
 	list-style-type: none;
@@ -54,8 +52,34 @@ form button {
 	/*visibility: hidden;*/
 }
 
-#user {
+.modal {
+	display: none;
+	position: absolute;
+	max-width: 500px;
+	height: 250px;
+	width: 100%;
+	background: #FFF;
+	border-radius: 4px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
 
+.modal form, .modal button {
+	margin: 15px auto;
+	border: none;
+	display: block;
+}
+
+.modal button {
+	position: static;
+	right: auto;
+	background: rgb(130, 224, 255);
+	padding: 10px;
+}
+
+.modal input {
+	border: 1px solid black;
 }
 
 nav {
