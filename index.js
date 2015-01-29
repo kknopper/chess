@@ -3,10 +3,15 @@ var path = require('path');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var bodyParser = require('body-parser');
 var users = {};
 var games = {};
-var usernames = [];
+var usernames = ['kevin'];
+
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 var url = 'room';
 
 app.get('/', function(req, res) {
@@ -20,6 +25,23 @@ app.get('/favicon.ico', function(req, res) {
 var createID = function () {
 	return Date.now();
 }
+
+app.post('/create', function(req, res) {
+	console.log(req.body.userName);
+
+	if (usernames.indexOf(req.body.userName)!= -1) {
+		console.log('username already exists');
+		// socket.emit('userNameError');	
+		res.send(false);	
+	}
+	else {
+		usernames.push(req.body.userName);
+		console.log(usernames);
+		//req.body is data object
+		console.log(req.body);
+		res.send(req.body);
+	}
+});
 
 
 app.get('/create', function (req, res) {
@@ -36,10 +58,6 @@ app.get('/game/:gameID', function (req, res, next) {
 	res.sendFile(__dirname + '/game.html');
 });
 
-app.newGame = function(req, res) {
-	res.redirect('/create');
-}
-
 
 // app.use(express.static(__dirname + '/'));
 // app.listen(process.env.PORT || 3000);
@@ -48,60 +66,40 @@ io.on('connection', function(socket) {
 	console.log('a user connected');
 
 	function updateUsernames() {
-		io.emit('updateUsers', users);
+		socket.emit('updateUsers', users);
 	}
 
-	socket.on('join room', function (room, usernameVal, callback) {
+	socket.on('join room', function ( userData, callback) {
+		var room = createID();
 		socket.room = room;
-		if (usernames.indexOf(usernameVal)!= -1) {
-			console.log(usernameVal);
-			console.log(users);
-			callback(false);
-		}
-		else {
-			console.log(usernameVal);
-			console.log('false');
-			callback(true);
-			users[socket.id] = usernameVal;
-			socket.username = usernameVal
-			usernames.push(usernameVal);
-			console.log(users);
 
-			updateUsernames();
-			socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
-		}
 
-		if (games[room] && games[room].length && games[room].length <= 1) {
-			games[room].push(socket.id);
-			socket.join(room);
-			console.log(users[socket.id], 'joined', room);
-			// var url = document.URL;
-			// url = window.location.replace(url+'/create');
-			app.put('/', function (req, res) {
-			  res.redirect('/create');
-			});
-
-			// app.newGame();
-		} else if (games[room] && games[room].length && games[room].length >= 2) {
-			console.log('too many people in the room');
-			var Error = io.of('/error').on('connection', function(){
-				socket.emit('testError', 'this is a test');
-				error.emit('testError2','this is another test');
-			});
-			// socket.to(socket.id).emit('joinError')
-		} else {
-			games[room] = [];
-			games[room].push(socket.id);
-			socket.join(room);
-			console.log(users[socket.id], 'joined', room);
-			// var url = document.URL;
-			// url = window.location.replace(url+'/create');
-			// app.newGame();
-			app.put('/', function (req, res) {
-			  res.redirect('/create');
-			});
-
-		}
+			if (games[room] && games[room].length && games[room].length <= 1) {
+				games[room].push(socket.id);
+				socket.join(room);
+				users[socket.id] = userData.userName;
+				socket.username = userData.userName
+				console.log(users);
+				console.log(users[socket.id], 'joined', room);
+				updateUsernames();
+				
+				socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
+				// callback(true);
+			
+			} else if (games[room] && games[room].length && games[room].length >= 2) {
+				console.log('too many people in the room');
+				callback(false);
+			} else {
+				games[room] = [];
+				games[room].push(socket.id);
+				socket.join(room);
+				users[socket.id] = userData.userName;
+				socket.username = userData.userName
+				console.log(users);
+				console.log(users[socket.id] + ' joined ' + room);
+				socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
+			}			
+		
 	});
 
 	socket.on('updateUsers', function(usernameVal, callback){
@@ -128,7 +126,7 @@ io.on('connection', function(socket) {
 		console.log('a user disconnected');
 		if (!users[socket.id]) return;
 		usernames.splice(usernames.indexOf(socket.username), 1);
-		io.broadcast.to(socket.room).emit('userDisconnect', users[socket.id] +' disconnected');
+		io.emit('userDisconnect', users[socket.id] +' disconnected');
 		delete users[socket.id];
 		updateUsernames();
 	});
@@ -147,8 +145,9 @@ io.on('connection', function(socket) {
 		socket.to(socket.room).emit('scrollChat');
 	});
 	socket.on('chessMove', function(boardPosition, gamePosition) {
-		socket.broadcast.to(socket.room).emit('chessMove', boardPosition, gamePosition);
-		console.log(boardPosition + 'player moved');
+		// socket.broadcast.to(socket.room).emit('chessMove', boardPosition, gamePosition);
+		socket.emit('chessMove', boardPosition, gamePosition);
+		console.log(boardPosition + ' player moved');
 	});
 });
 
