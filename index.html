@@ -54,13 +54,22 @@
         
         <div class="button-wrap">
           <a href="#" id="createButton" class="button-primary pure-button">Create a game</a>
-          <a href="#" class="button-primary pure-button"> Watch a game</a>
+          <a href="#" id="joinButton" class="button-primary pure-button"> Join a game</a>
         </div>
 
-         <div class="modal">
+         <div class="modal username-modal">
             <h1>Enter a username:</h1>
             <form id="userForm" action="">
               <input id="userName" type="text"><button>Submit</button>
+            </form>
+          </div>
+
+          <div class="modal game-modal">
+            <h1>Enter a username:</h1>
+            <input id="joinUserName" type="text">
+            <h1>Enter a game code:</h1>
+            <form id="gameForm" action="">
+              <input id="gameCode" type="text"><button>Submit</button>
             </form>
           </div>
           <!-- <main id="main">

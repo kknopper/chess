@@ -1,6 +1,7 @@
 var socket = io(),
 $chat = $('#chatForm'),
 $userForm = $('#userForm'),
+$gameForm = $('#gameForm'),
 $user = $('#user'),
 $userList = $('.userList'),
 $content = $('#main');
@@ -41,9 +42,39 @@ $userForm.submit(function(e){
 	$('#userName').val(''); 
 });
 
+$gameForm.submit(function(e) {
+	e.preventDefault();
+	var newUserData = {};
+	newUserData.userName = $('#joinUserName').val();
+	newUserData.color = 'b';
+	newUser.gameID = $('#gameCode').val();
+
+	$.post('/join', newUserData, function(userData) {
+
+		if (userData == 0) {
+			swal('Sorry', 'That game code is invalid, make sure the code is correct!', 'error');
+		}
+
+		else if (userData == 1) {
+			swal('Uh-oh', 'That username is already taken, try another one!', 'error');
+		}
+
+		else{
+			window.location = '/game/' + gameRoom;
+			socket.emit('join room', userName, function(username) {
+				console.log(username);
+			});
+		}
+	})
+})
+
 
 $('#createButton').click(function(){
-	$('.modal').css('display', 'block');
+	$('.username-modal').css('display', 'block');
+})
+
+$('#joinButton').click(function(){
+	$('.game-modal').css('display', 'block');
 })
 
 //Alert Connects and Disconnects

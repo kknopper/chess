@@ -6,7 +6,7 @@ var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var users = {};
 var games = {};
-var usernames = ['kevin'];
+var usernames = [];
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
@@ -43,12 +43,29 @@ app.post('/create', function(req, res) {
 	}
 });
 
+app.post('/join', function(req,res) {
+
+	var response;
+
+	if(usernames.indexOf(req.body.userName)!= -1) { //if username already exists
+		response = 0;
+		res.send(response);
+	} 
+
+	else if (!games[req.body.gameID]) { //if game does not exist
+		response = 1;
+		res.send(response);
+	}
+
+	else if (Object.keys(games[req.body.gameID]))
+})
+
 
 app.get('/create', function (req, res) {
 	var newGame = createID();
 	games[newGame] = {};
-
 	res.redirect('/game/' + newGame);
+	//create socket room here
 });
 
 app.get('/game/:gameID', function (req, res, next) {
