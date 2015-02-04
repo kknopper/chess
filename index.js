@@ -3,15 +3,14 @@ var path = require('path');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var _ = require('lodash');
 var bodyParser = require('body-parser');
-var users = {};
-var games = {};
-var usernames = [];
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
 var url = 'room';
 
 app.get('/', function(req, res) {
@@ -22,6 +21,81 @@ app.get('/favicon.ico', function(req, res) {
 	res.send('');
 });
 
+
+// Game & User constructor functions
+
+function userList() {
+	this.users = [];
+}
+
+function user(socket, username) {
+	this.socket = socket;
+	this.username = username;
+}
+
+userList.prototype.findUser = function(identifier) {
+	if (typeof identifier == 'string') { // check if identifier is searching by username (better checks??)
+		var userIndex = _.findIndex(this.users, {'username': identifier});
+		if (userIndex == -1) return userIndex;
+		else return this.users[userIndex];
+	}
+
+	else {
+		var userIndex = _.findIndex(this.users, {'socket': identifier}); //identifier is searching for socket id
+		if (userIndex == -1) return userIndex;
+		else return this.users[userIndex];
+	}
+}
+
+userList.prototype.addUser = function(socket, username) {
+	var newUser = new user(socket, username);
+	this.users.push(newUsers);
+}
+
+function gamesCollection() {
+	this.games = [];
+};
+
+function game(id, white, black) {
+	this.id = id;
+	this.white = white;
+	this.black = black;
+}
+
+gamesCollection.prototype.addGame = function(id, color) {
+	if (color == 'white') {
+		var newGame = new game(id, color);
+	}
+
+	else if (color == 'black') {
+		var newGame = new game(id, undefined, color);
+	}
+}
+
+gamesCollection.prototype.findGame = function(gameID) {
+	var gameIndex = _.findIndex(this.games, {'id': gameID});
+	return this.games[gameIndex];
+};
+
+gamesCollection.prototype.joinGame = function(gameId, playerId, sideColor) {
+	var currentGame = this.findGame(gameId);
+	if (sideColor == 'white' && currentGame.white == undefined) {
+		currentGame.white = sideColor;
+	}
+	else if (sideColor == 'black' && currentGame.black == undefined) {
+		currentGame.black = sideColor;
+	}
+	else {
+		show.error(function() {
+			/* Act on the event */
+		});
+	}
+}
+
+var gamesCollection = new gamesCollection();
+var userList = new userList();
+
+
 var createID = function () {
 	return Date.now();
 }
@@ -29,13 +103,13 @@ var createID = function () {
 app.post('/create', function(req, res) {
 	console.log(req.body.userName);
 
-	if (usernames.indexOf(req.body.userName)!= -1) {
+	if (findUser(req.body.userName)!= -1) {
 		console.log('username already exists');
 		// socket.emit('userNameError');	
 		res.send(false);	
 	}
 	else {
-		usernames.push(req.body.userName);
+		addUser(req.body.userName); // add user to game
 		console.log(usernames);
 		//req.body is data object
 		console.log(req.body);
@@ -57,8 +131,10 @@ app.post('/join', function(req,res) {
 		res.send(response);
 	}
 
-	else if (Object.keys(games[req.body.gameID]))
-})
+	else if (Object.keys(games[req.body.gameID])) {
+
+	}
+});
 
 
 app.get('/create', function (req, res) {
