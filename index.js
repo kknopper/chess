@@ -5,11 +5,19 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var _ = require('lodash');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+//set up cookies and session vars to pass around routes
+app.use(cookieParser());
+app.use(session({secret:'somesecrettokenhere'}));
+
 
 var url = 'room';
 
@@ -28,7 +36,7 @@ function userList() {
 	this.users = [];
 }
 
-function user(socket, username) {
+function user(username, socket) {
 	this.socket = socket;
 	this.username = username;
 }
@@ -47,9 +55,9 @@ userList.prototype.findUser = function(identifier) {
 	}
 }
 
-userList.prototype.addUser = function(socket, username) {
-	var newUser = new user(socket, username);
-	this.users.push(newUsers);
+userList.prototype.newUser = function(username, socket) {
+	var newUser = new user(username, socket);
+	this.users.push(newUser);
 }
 
 function gamesCollection() {
@@ -62,13 +70,15 @@ function game(id, white, black) {
 	this.black = black;
 }
 
-gamesCollection.prototype.addGame = function(id, color) {
+gamesCollection.prototype.newGame = function(id, color) {
 	if (color == 'white') {
 		var newGame = new game(id, color);
+		this.games.push(newGame);
 	}
 
 	else if (color == 'black') {
 		var newGame = new game(id, undefined, color);
+		this.games.push(newGame);
 	}
 }
 
@@ -86,9 +96,7 @@ gamesCollection.prototype.joinGame = function(gameId, playerId, sideColor) {
 		currentGame.black = sideColor;
 	}
 	else {
-		show.error(function() {
-			/* Act on the event */
-		});
+		alert('this game is full');
 	}
 }
 
@@ -97,23 +105,25 @@ var userList = new userList();
 
 
 var createID = function () {
-	return Date.now();
+	return Math.random().toString(36).substring(16);
 }
 
 app.post('/create', function(req, res) {
-	console.log(req.body.userName);
 
-	if (findUser(req.body.userName)!= -1) {
+	if (userList.findUser(req.body.userName)!= -1) {
 		console.log('username already exists');
 		// socket.emit('userNameError');	
 		res.send(false);	
 	}
 	else {
-		addUser(req.body.userName); // add user to game
-		console.log(usernames);
+		userList.newUser(req.body.userName); // add user to userList
+		var randID = createID();
+		gamesCollection.newGame(randID, req.body.userName);
 		//req.body is data object
-		console.log(req.body);
-		res.send(req.body);
+		req.session.gameId = randID;
+		req.session.userName = req.body.userName;
+		res.redirect('/create')
+		// res.send(req.body);
 	}
 });
 
@@ -121,7 +131,7 @@ app.post('/join', function(req,res) {
 
 	var response;
 
-	if(usernames.indexOf(req.body.userName)!= -1) { //if username already exists
+	if(usernames.indexOf(req.body.userName) == -1) { //if username  exists
 		response = 0;
 		res.send(response);
 	} 
@@ -138,111 +148,130 @@ app.post('/join', function(req,res) {
 
 
 app.get('/create', function (req, res) {
-	var newGame = createID();
-	games[newGame] = {};
-	res.redirect('/game/' + newGame);
+	var newGameId = req.session.gameId;
+	res.redirect('/game/' + newGameId);
 	//create socket room here
 });
 
 app.get('/game/:gameID', function (req, res, next) {
-	console.log(req.params);
+	// console.log(req.params);
 	var gameID = req.params.gameID;
-	//if (gameID.length !== 5) return res.send('Game ID not valid');
 	res.sendFile(__dirname + '/game.html');
-});
 
+	io.on('connection', function(socket) {
+		var currentUserName = req.session.userName;
+		var currentUser = userList.findUser(currentUserName);
+		currentUser.socket = socket.id;
+		console.log(currentUserName + ' connected');
+		console.log(userList);
+
+		socket.on('join room', function ( userData, callback) {
+			var room = createID();
+			socket.room = room;
+		});
+
+	});
+
+
+	// var gameSocket = io.of('/game');
+	// gameSocket.on()
+
+	var joiningUser = userList.findUser(req.session.userName);
+	// joiningUser.socket = socket.id;/\
+	// console.log(userList);
+});
 
 // app.use(express.static(__dirname + '/'));
 // app.listen(process.env.PORT || 3000);
 
-io.on('connection', function(socket) {
-	console.log('a user connected');
+// io.on('connection', function(socket) {
+// 	console.log('a user connected');
 
-	function updateUsernames() {
-		socket.emit('updateUsers', users);
-	}
+// 	function updateUsernames() {
+// 		socket.emit('updateUsers', users);
+// 	}
 
-	socket.on('join room', function ( userData, callback) {
-		var room = createID();
-		socket.room = room;
+// 	socket.on('join room', function ( userData, callback) {
+// 		var room = createID();
+// 		socket.room = room;
 
 
-			if (games[room] && games[room].length && games[room].length <= 1) {
-				games[room].push(socket.id);
-				socket.join(room);
-				users[socket.id] = userData.userName;
-				socket.username = userData.userName
-				console.log(users);
-				console.log(users[socket.id], 'joined', room);
-				updateUsernames();
+// 			// if (games[room] && games[room].length && games[room].length <= 1) {
+// 			// 	games[room].push(socket.id);
+// 			// 	socket.join(room);
+// 			// 	users[socket.id] = userData.userName;
+// 			// 	socket.username = userData.userName
+// 			// 	console.log(users);
+// 			// 	console.log(users[socket.id], 'joined', room);
+// 			// 	updateUsernames();
 				
-				socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
-				// callback(true);
+// 			// 	socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
+// 			// 	// callback(true);
 			
-			} else if (games[room] && games[room].length && games[room].length >= 2) {
-				console.log('too many people in the room');
-				callback(false);
-			} else {
-				games[room] = [];
-				games[room].push(socket.id);
-				socket.join(room);
-				users[socket.id] = userData.userName;
-				socket.username = userData.userName
-				console.log(users);
-				console.log(users[socket.id] + ' joined ' + room);
-				socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
-			}			
+// 			// } else if (games[room] && games[room].length && games[room].length >= 2) {
+// 			// 	console.log('too many people in the room');
+// 			// 	callback(false);
+// 			// } else {
+// 			// 	games[room] = [];
+// 			// 	games[room].push(socket.id);
+// 			// 	socket.join(room);
+// 			// 	users[socket.id] = userData.userName;
+// 			// 	socket.username = userData.userName
+// 			// 	console.log(users);
+// 			// 	console.log(users[socket.id] + ' joined ' + room);
+// 			// 	socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
+// 			// }			
 		
-	});
+// 	});
 
-	socket.on('updateUsers', function(usernameVal, callback){
-		if (usernames.indexOf(usernameVal)!= -1) {
-			console.log(usernameVal);
-			console.log(users);
-			callback(false);
-		}
-		else {
-			console.log(usernameVal);
-			console.log('false');
-			callback(true);
-			users[socket.id] = usernameVal;
-			socket.username = usernameVal
-			usernames.push(usernameVal);
-			console.log(users);
+	// socket.on('updateUsers', function(usernameVal, callback){
+	// 	if (usernames.indexOf(usernameVal)!= -1) {
+	// 		console.log(usernameVal);
+	// 		console.log(users);
+	// 		callback(false);
+	// 	}
+	// 	else {
+	// 		console.log(usernameVal);
+	// 		console.log('false');
+	// 		callback(true);
+	// 		users[socket.id] = usernameVal;
+	// 		socket.username = usernameVal
+	// 		usernames.push(usernameVal);
+	// 		console.log(users);
 
-			updateUsernames();
-			socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
-		}
-	});
+	// 		updateUsernames();
+	// 		socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
+	// 	}
+	// });
 
-	socket.on('disconnect', function() {
-		console.log('a user disconnected');
-		if (!users[socket.id]) return;
-		usernames.splice(usernames.indexOf(socket.username), 1);
-		io.emit('userDisconnect', users[socket.id] +' disconnected');
-		delete users[socket.id];
-		updateUsernames();
-	});
-	socket.on('chat message', function(msg) {
-		socket.to(socket.room).emit('chat message', msg, users[socket.id]);
-		console.log(users[socket.id]+': '+msg);
-	});
-	socket.on('userTyping', function(){
-		socket.broadcast.to(socket.room).emit('userTyping', users[socket.id] + ' is typing...');
-		console.log(users[socket.id] + ' is typing...');
-	});
-	socket.on('userNotTyping', function(){
-		socket.broadcast.to(socket.room).emit('userNotTyping');
-	});
-	socket.on('scrollChat', function() {
-		socket.to(socket.room).emit('scrollChat');
-	});
-	socket.on('chessMove', function(boardPosition, gamePosition) {
-		// socket.broadcast.to(socket.room).emit('chessMove', boardPosition, gamePosition);
-		socket.emit('chessMove', boardPosition, gamePosition);
-		console.log(boardPosition + ' player moved');
-	});
-});
+	// socket.on('disconnect', function() {
+	// 	console.log('a user disconnected');
+	// 	// if (!users[socket.id]) return;
+	// 	// usernames.splice(usernames.indexOf(socket.username), 1);
+	// 	// io.emit('userDisconnect', users[socket.id] +' disconnected');
+	// 	// delete users[socket.id];
+	// 	// updateUsernames();
+	// });
+	// socket.on('chat message', function(msg) {
+	// 	socket.to(socket.room).emit('chat message', msg, users[socket.id]);
+	// 	console.log(users[socket.id]+': '+msg);
+	// });
+	// socket.on('userTyping', function(){
+	// 	socket.broadcast.to(socket.room).emit('userTyping', users[socket.id] + ' is typing...');
+	// 	console.log(users[socket.id] + ' is typing...');
+	// });
+	// socket.on('userNotTyping', function(){
+	// 	socket.broadcast.to(socket.room).emit('userNotTyping');
+	// });
+	// socket.on('scrollChat', function() {
+	// 	socket.to(socket.room).emit('scrollChat');
+	// });
+	// socket.on('chessMove', function(boardPosition, gamePosition) {
+	// 	// socket.broadcast.to(socket.room).emit('chessMove', boardPosition, gamePosition);
+	// 	socket.emit('chessMove', boardPosition, gamePosition);
+	// 	console.log(boardPosition + ' player moved');
+	// });
+// });
 
 http.listen(3000, function(){
 	console.log('listening on *:3000');
