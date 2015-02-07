@@ -1,5 +1,5 @@
-var socket = io(),
-$chat = $('#chatForm'),
+// var socket = io(),
+var $chat = $('#chatForm'),
 $userForm = $('#userForm'),
 $gameForm = $('#gameForm'),
 $user = $('#user'),
@@ -21,21 +21,24 @@ $userForm.submit(function(e){
 	e.preventDefault();
 	var newUserData = {};
 	newUserData.userName = $('#userName').val();
+
 	newUserData.color = 'w';
 	console.log(newUserData);
 
-	$.post('/create', newUserData,  function(userData) {
+	$.post('/create', newUserData, function(userData) {
 		console.log(userData);
 		if (!userData) {
 			swal('Uh-oh', 'That username is already taken, try another one!', 'error');
 		}
 		else  {
+			localStorage.setItem("username", newUserData.userName);
+			console.log(localStorage.getItem('username'));
 			window.location ='/create';
 
 			//After Redirect Join user to socket room
-			socket.emit('join room', userData, function(username) {
-				console.log(username);
-			});
+			// socket.emit('join room', userData, function(username) {
+			// 	console.log(username);
+			// });
 		}
 	});
 
@@ -61,9 +64,9 @@ $gameForm.submit(function(e) {
 
 		else{
 			window.location = '/game/' + gameRoom;
-			socket.emit('join room', userName, function(username) {
-				console.log(username);
-			});
+			// socket.emit('join room', userName, function(username) {
+			// 	console.log(username);
+			// });
 		}
 	})
 })
@@ -77,10 +80,10 @@ $('#joinButton').click(function(){
 	$('.game-modal').css('display', 'block');
 })
 
-//Alert Connects and Disconnects
-socket.on('userConnect', function(alert){
-  $('#messages').append($('<li>').text(alert).addClass('connect-alert'));
-});
-socket.on('userDisconnect', function(alert){
-  $('#messages').append($('<li>').text(alert).addClass('disconnect-alert'));
-});
+// //Alert Connects and Disconnects
+// socket.on('userConnect', function(alert){
+//   $('#messages').append($('<li>').text(alert).addClass('connect-alert'));
+// });
+// socket.on('userDisconnect', function(alert){
+//   $('#messages').append($('<li>').text(alert).addClass('disconnect-alert'));
+// });

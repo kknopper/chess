@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
   extended: true
@@ -121,8 +120,8 @@ app.post('/create', function(req, res) {
 		gamesCollection.newGame(randID, req.body.userName);
 		//req.body is data object
 		req.session.gameId = randID;
-		req.session.userName = req.body.userName;
-		res.redirect('/create')
+		// req.session.userName = req.body.userName;
+		res.redirect('/create');
 		// res.send(req.body);
 	}
 });
@@ -150,7 +149,6 @@ app.post('/join', function(req,res) {
 app.get('/create', function (req, res) {
 	var newGameId = req.session.gameId;
 	res.redirect('/game/' + newGameId);
-	//create socket room here
 });
 
 app.get('/game/:gameID', function (req, res, next) {
@@ -158,9 +156,29 @@ app.get('/game/:gameID', function (req, res, next) {
 	var gameID = req.params.gameID;
 	res.sendFile(__dirname + '/game.html');
 
-	io.on('connection', function(socket) {
-		var currentUserName = req.session.userName;
+	// var joiningUser = userList.findUser(req.session.userName);
+	// joiningUser.socket = socket.id;/\
+	// console.log(userList);
+});
+
+io.on('connection', function(socket) {
+
+	socket.emit('startSetup', socket.id);
+
+	socket.on('setup', function(username){
+		console.log('socket: '+socket.id);
+		console.log(username + ' connected');
+
+
+		var currentUser = userList.findUser(username);
+		currentUser.socket = socket.id;
+		console.log(userList);
+		//var currentUserName = data.userName
+
+		//localStorage on index.js yo
+		var currentUserName = gamesCollection.findGame()
 		var currentUser = userList.findUser(currentUserName);
+		console.log('current user:'+currentUser.userName);
 		currentUser.socket = socket.id;
 		console.log(currentUserName + ' connected');
 		console.log(userList);
@@ -169,16 +187,7 @@ app.get('/game/:gameID', function (req, res, next) {
 			var room = createID();
 			socket.room = room;
 		});
-
-	});
-
-
-	// var gameSocket = io.of('/game');
-	// gameSocket.on()
-
-	var joiningUser = userList.findUser(req.session.userName);
-	// joiningUser.socket = socket.id;/\
-	// console.log(userList);
+	})
 });
 
 // app.use(express.static(__dirname + '/'));

@@ -1,7 +1,8 @@
 var url = window.location.href;
 var gameID = url.substring(url.lastIndexOf('/') + 1);
 console.log(gameID);
-var socket = io('/'+gameID),
+// var socket = io('/'+gameID),
+var socket = io('/'),
 $chat = $('#chatForm'),
 $userForm = $('#userForm'),
 $user = $('#user'),
@@ -128,6 +129,11 @@ $(function() {
 	  	game.load(gamePosition);
 	});
 }); // end chess js
+
+socket.on('startSetup', function() {
+	console.log('a user connected');
+	socket.emit('setup', localStorage.getItem('username'));
+})
 
 //Alert Connects and Disconnects
 socket.on('userConnect', function(alert){
