@@ -17,7 +17,6 @@ $('#m').keypress($.debounce(5000, true, function(){
 }));
 
 
-
 $(function() {
 	var board,
 	boardEl = $('#board'),
@@ -132,6 +131,7 @@ $(function() {
 
 socket.on('startSetup', function() {
 	console.log('a user connected');
+	console.log(localStorage.getItem('username'));
 	socket.emit('setup', localStorage.getItem('username'));
 })
 

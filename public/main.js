@@ -50,25 +50,29 @@ $gameForm.submit(function(e) {
 	var newUserData = {};
 	newUserData.userName = $('#joinUserName').val();
 	newUserData.color = 'b';
-	newUser.gameID = $('#gameCode').val();
+	newUserData.gameId = $('#gameCode').val();
 
 	$.post('/join', newUserData, function(userData) {
-
-		if (userData == 0) {
-			swal('Sorry', 'That game code is invalid, make sure the code is correct!', 'error');
+		// if post is successful redirect 
+		window.location = '/game/' + newUserData.gameId;
+		
+	}).fail(function(xhr) {
+		var response = JSON.parse(xhr.responseText);
+		switch(response.error) {
+			case 'userNameExists':
+				swal('Uh-oh', 'That username is already taken, try another one!', 'error');
+				break;
+			case 'gameDoesNotExist':
+				swal('Sorry', 'That game code is invalid, make sure the code is correct!', 'error');
+				break;
+			case 'gameIsFull':
+				swal('Sorry', 'That game is already full, try joining another game!', 'error');
+				break;
+			default:
+				swal('SERVER ERROR', 'Something went wrong, try again', 'error');
+				break;
 		}
-
-		else if (userData == 1) {
-			swal('Uh-oh', 'That username is already taken, try another one!', 'error');
-		}
-
-		else{
-			window.location = '/game/' + gameRoom;
-			// socket.emit('join room', userName, function(username) {
-			// 	console.log(username);
-			// });
-		}
-	})
+	});
 })
 
 
