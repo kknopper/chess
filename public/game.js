@@ -9,12 +9,19 @@ $user = $('#user'),
 $userList = $('.userList'),
 $content = $('#main');
 
-//User Typing Trigger
-$('#m').keypress($.debounce(5000, true, function(){
-	socket.emit('userTyping');
-})).keypress($.debounce(5000, function(){
-	socket.emit('userNotTyping');
-}));
+// var playerColor;
+
+socket.on('startSetup', function(currentPlayerColor) {
+	console.log('a user connected');
+	console.log( 'local storage username: '+ localStorage.getItem('username'));
+	socket.emit('setup', localStorage.getItem('username'));
+});
+
+// socket.on('endSetup', function(currentPlayerColor) {
+// 	playerColor = currentPlayerColor;
+// 	console.log(playerColor);
+// });
+
 
 
 $(function() {
@@ -24,6 +31,8 @@ $(function() {
 	 squareClass = 'square-55d63',
   	squareToHighlight,
   	colorToHighlight;
+
+  	var playerColor = 'white';
 
 	var removeHighlights = function(color) {
 	  boardEl.find('.square-55d63')
@@ -48,11 +57,28 @@ $(function() {
 	var onDragStart = function(source, piece) {
 	  // do not pick up pieces if the game is over
 	  // or if it's not that side's turn
-	  if (game.game_over() === true ||
-	      (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-	      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+
+
+	  socket.emit('getColor');
+	  socket.on('getColor', function(color) {
+	  	playerColor = color;
+	  	console.log(playerColor);
+	  });
+
+	  if (game.game_over() === true || (game.turn() === 'w' && piece.search(/^b/) !== -1) ||(game.turn() === 'b' && piece.search(/^w/) !== -1)) {
 	    return false;
 	  }
+
+	  if (playerColor === 'black' && game.turn() === 'w') { //white only moves on whites turn
+	  	return false;
+	  }
+
+	  if (playerColor === 'white' && game.turn() === 'b') { // black only moves on blacks turn 
+	  	//&& piece.search(/^b/) !== -1 && piece.search(/^w/)
+	  	return false;
+	  }
+
+
 	};
 
 	var onDrop = function(source, target) {
@@ -129,11 +155,34 @@ $(function() {
 	});
 }); // end chess js
 
-socket.on('startSetup', function() {
-	console.log('a user connected');
-	console.log(localStorage.getItem('username'));
-	socket.emit('setup', localStorage.getItem('username'));
-})
+
+
+
+$chat.submit(function(e){
+	e.preventDefault();
+	socket.emit('chat message', $('#m').val());
+	socket.emit('userNotTyping');
+	$('#m').val('');
+	return false;
+});
+
+//User Typing Trigger
+$('#m').keypress($.debounce(5000, true, function(){
+	console.log('keypress');
+	socket.emit('userTyping');
+})).keypress($.debounce(5000, function(){
+	socket.emit('userNotTyping');
+}));
+
+socket.on('chat message', function(msg, userName){
+	console.log('chat message', msg, userName);
+  $('#messages').append($('<li>').text(userName+': '+msg));
+  socket.emit('scrollChat');
+});
+
+
+
+
 
 //Alert Connects and Disconnects
 socket.on('userConnect', function(alert){
@@ -151,10 +200,7 @@ socket.on('updateUsers', function(users) {
 	$userList.html(html);
 });
 //Send Message Function
-socket.on('chat message', function(msg, user){
-  $('#messages').append($('<li>').text(user+': '+msg));
-  socket.emit('scrollChat');
-});
+
 socket.on('userTyping', function(alert) {
 	$('#messages').append($('<li>').text(alert).addClass('user-typing'));
 	socket.emit('scrollChat');
@@ -167,9 +213,3 @@ socket.on('scrollChat', function() {
 	var newscrollHeight = $("#messages").prop("scrollHeight") - 25; //Scroll height after the request
 	$("#messages").animate({ scrollTop: newscrollHeight }, 'normal'); //Autoscroll to bottom of div
 });
-socket.on('joinError', function() {
-	swal('Error','This room is already full', 'error');
-});
-socket.on('userNameError', function() {
-	swal('Uh-oh', 'That username is already taken, try another one!', 'error');
-})

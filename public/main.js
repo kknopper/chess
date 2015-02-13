@@ -8,14 +8,6 @@ $content = $('#main');
 
 var room = location.pathname.slice(1);;
 
-// var playerTurn = 'w';
-$chat.submit(function(e){
-	e.preventDefault();
-	socket.emit('chat message', $('#m').val());
-	socket.emit('userNotTyping');
-	$('#m').val('');
-	return false;
-});
 
 $userForm.submit(function(e){
 	e.preventDefault();
@@ -54,6 +46,7 @@ $gameForm.submit(function(e) {
 
 	$.post('/join', newUserData, function(userData) {
 		// if post is successful redirect 
+		localStorage.setItem("username", newUserData.userName);
 		window.location = '/game/' + newUserData.gameId;
 		
 	}).fail(function(xhr) {

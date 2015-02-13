@@ -36,17 +36,17 @@ function userList() {
 }
 
 function user(userName, socket) {
-	this.socket = socket;
+	this.socketId = socket;
 	this.userName = userName;
 }
 
 userList.prototype.findUser = function(identifier, token) {
 	//identifier == username or user id
 	//token == 'un' for username or 'id' for user socker id
-	 
+
 	return _.find(this.users, function(user) {
 		if (token === 'un' && user.userName === identifier) return true;
-		else if (token === 'id' && user.socket === identifier) return true;
+		else if (token === 'id' && user.socketId === identifier) return true;
 		else return false;
 	});
 }
@@ -62,15 +62,24 @@ function gamesCollection() {
 
 function game(id, player1, player2) {
 	this.id = id;
-	this.users = [];
+	this.players = [];
 }
 
-game.prototype.addUser = function(user) {
-	this.users.push(user);
+game.prototype.addPlayer = function(user) {
+	this.players.push(user);
 }
 
 game.prototype.isFull = function() {
-	 return this.users.length > 1;
+	 return this.players.length > 1;
+}
+
+game.prototype.getPlayer = function(userName) {
+	return _.find(this.players, {'userName': userName});
+}
+
+game.prototype.getPlayerColor = function(userName) {
+	var player = _.find(this.players, {'userName': userName});
+	return player.color;
 }
 
 gamesCollection.prototype.newGame = function(gameid, color, username) {
@@ -80,7 +89,7 @@ gamesCollection.prototype.newGame = function(gameid, color, username) {
 			color: color
 		};
 		var newGame = new game(gameid);
-		newGame.addUser(userObject);
+		newGame.addPlayer(userObject);
 		this.games.push(newGame);
 }
 
@@ -90,17 +99,17 @@ gamesCollection.prototype.findGame = function(gameID) {
 
 gamesCollection.prototype.findGameFromUser = function(userName) {
 	return _.find(this.games, function(game) { 
-		return _.where(game.users, {userName: userName}).length;
+		return _.where(game.players, {userName: userName}).length;
 	 });
 }
 
 gamesCollection.prototype.joinGame = function(gameId, player2userName) {
 	var currentGame = this.findGame(gameId);
 
-	if (currentGame.users.length == 1) { //if you can join the game
-		var color = currentGame.users[0].color;
+	if (currentGame.players.length == 1) { //if you can join the game
+		var color = currentGame.players[0].color;
 		var newUserColor = color == 'white' ? 'black':'white';
-		currentGame.addUser({userName: player2userName, color: newUserColor});
+		currentGame.addPlayer({userName: player2userName, color: newUserColor});
 		console.log(gamesCollection);
 	}
 
@@ -169,6 +178,7 @@ app.post('/join', function(req,res) {
 		else {
 			var searchedGame = gamesCollection.findGame(req.body.gameId);
 			gamesCollection.joinGame(searchedGame.id, req.body.userName);
+			userList.newUser(req.body.userName, undefined);
 			console.log('joined room');
 			res.send();
 		}
@@ -197,35 +207,69 @@ app.get('/game/:gameID', function (req, res, next) {
 
 io.on('connection', function(socket) {
 
-	socket.emit('startSetup', socket.id);
+	socket.emit('startSetup');
 
 	socket.on('setup', function(username){
 		console.log('socket: '+socket.id);
 		console.log(username + ' connected');
+		console.log(userList);
+		console.log(gamesCollection.games);
 
 
 		var currentUser = userList.findUser(username, 'un');
-		currentUser.socket = socket.id;
+		console.log(currentUser);
+		currentUser.socketId = socket.id;
 		console.log(userList);
-		//var currentUserName = data.userName
-
-		//localStorage on main.js yo
+		console.log(gamesCollection.games);
+	
 
 		console.log('current user: '+currentUser.userName);
-		currentUser.socket = socket.id;
-		console.log(currentUser.userName + ' connected');
+		currentUser.socketId = socket.id;
+		console.log(currentUser.userName + 'connected');
 		console.log(userList);
+		var currentGame = gamesCollection.findGameFromUser(username);
+		console.log(currentGame);
+		var color = currentGame.getPlayerColor(username);
+		console.log(color);
+		// socket.(socket.id).emit('endSetup', color);
 	});
 
-	socket.on('join room', function ( userData, callback) {
-		var room = createID();
-		socket.room = room;
-	});
+	socket.on('getColor', function() {
+
+		var currentUser = userList.findUser(socket.id, 'id'); 
+		var currentGame = gamesCollection.findGameFromUser(currentUser.userName);
+		console.log(currentGame);
+		var color = currentGame.getPlayerColor(currentUser.userName);
+		socket.emit('getColor', color);
+	})
+
+	// socket.on('join room', function ( userData, callback ) {
+	// 	var room = createID();
+	// 	socket.room = room;
+	// });
 
 	socket.on('chessMove', function(boardPosition, gamePosition) {
 		// socket.broadcast.to(socket.room).emit('chessMove', boardPosition, gamePosition);
-		socket.emit('chessMove', boardPosition, gamePosition);
+		io.emit('chessMove', boardPosition, gamePosition);
 		console.log(boardPosition + ' player moved');
+	});
+
+	socket.on('chat message', function(msg) {
+		var currentUser = userList.findUser(socket.id, 'id');
+		io.emit('chat message', msg, currentUser.userName);
+		console.log(currentUser.userName+': '+msg);
+	});
+
+	 socket.on('userTyping', function(){
+	 	var currentUser = userList.findUser(socket.id, 'id');
+		socket.broadcast.emit('userTyping', currentUser.userName + ' is typing...');
+		console.log(currentUser.userName + ' is typing...');
+	});
+	socket.on('userNotTyping', function(){
+		io.emit('userNotTyping');
+	});
+	socket.on('scrollChat', function() {
+		io.emit('scrollChat');
 	});
 });
 
