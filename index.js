@@ -241,7 +241,7 @@ io.on('connection', function(socket) {
 		console.log(currentGame);
 		var color = currentGame.getPlayerColor(currentUser.userName);
 		socket.emit('getColor', color);
-	})
+	});
 
 	// socket.on('join room', function ( userData, callback ) {
 	// 	var room = createID();
@@ -270,6 +270,10 @@ io.on('connection', function(socket) {
 	});
 	socket.on('scrollChat', function() {
 		io.emit('scrollChat');
+	});
+
+	socket.on('pieceDrop', function(pieceSource, pieceTarget) {
+		socket.broadcast.emit('pieceDrop', pieceSource, pieceTarget);
 	});
 });
 

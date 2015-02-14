@@ -69,11 +69,12 @@ $gameForm.submit(function(e) {
 })
 
 
-$('#createButton').click(function(){
+$('#createButton').click(function(e){
 	$('.username-modal').css('display', 'block');
 })
 
-$('#joinButton').click(function(){
+$('#joinButton').click(function(e){
+	//stop propogation
 	$('.game-modal').css('display', 'block');
 })
 

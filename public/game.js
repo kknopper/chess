@@ -32,7 +32,11 @@ $(function() {
   	squareToHighlight,
   	colorToHighlight;
 
-  	var playerColor = 'white';
+  // 	socket.emit('getColor');
+	 //  socket.on('getColor', function(color) {
+	 //  	playerColor = color;
+	 //  	console.log(playerColor);
+	 // });
 
 	var removeHighlights = function(color) {
 	  boardEl.find('.square-55d63')
@@ -93,6 +97,14 @@ $(function() {
 
 	  // illegal move
 	  if (move === null) return 'snapback';
+
+	  socket.emit('pieceDrop', source, target);
+	  socket.on('pieceDrop', function(pieceSource, pieceTarget) {
+	  	removeHighlights('black');
+	  	removeHighlights('white');
+	  	boardEl.find('.square-' + pieceSource).addClass('highlight-white');
+	  	boardEl.find('.square-' + pieceTarget).addClass('highlight-black');
+	  })
 
 	  	removeHighlights('black');
 		removeHighlights('white');
