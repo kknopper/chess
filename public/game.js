@@ -142,6 +142,26 @@ socket.on('endSetup', function(currentPlayerColor, currentBoardPosition, gamePos
 		  console.log(board.fen());
 		  console.log(game.fen());
 		  socket.emit('chessMove', board.fen(), game.fen());
+
+		  if (game.in_checkmate()) {
+		  	socket.emit('gameInCheckmate');
+		  }
+
+		  else if (game.in_check()) {
+		  	socket.emit('gameInCheck');
+		  }
+
+		  else if (game.in_threefold_repetition()) {
+		  	socket.emit('gameInThreefold');
+		  }
+
+		  else if (game.in_stalemate()) {
+		  	socket.emit('gameInStalemate');
+		  }
+
+		  else if(game.in_draw()) {
+		  	socket.emit('gameInDraw');
+		  }
 		};
 
 		var cfg = {
@@ -163,6 +183,38 @@ socket.on('endSetup', function(currentPlayerColor, currentBoardPosition, gamePos
 		  	console.log(gamePosition);
 		  	game.load(gamePosition);
 		});
+
+		socket.on('offensiveCheck', function() {
+			swal("Check!", "You put your opponent in check! Keep up the attack!", "success");
+		});
+
+		socket.on('defensiveCheck', function() {
+			swal("Check!", "Your opponent is on the attack! Move or defend your King!", "error");
+		});
+
+		socket.on('offensiveCheckmate', function() {
+			swal("Checkmate!", "You have trapped the opposing king. You won this game!", "success");
+		});
+
+		socket.on('defensiveCheckmate', function() {
+			swal("Checkmate!", "Your king is trapped! You lose this game.", "error");
+		});
+
+		socket.on('offensiveStalemate', function() {
+			swal("Stalemate!", "You let your opponent sneak away with a draw. Better luck next game!", "warning" )
+		});
+
+		socket.on('defensiveStalemate', function() {
+			swal("Stalemate!", "You swindled your opponent's chance for a win. Well played!", "warning" )
+		});
+
+		socket.on('drawGame', function() {
+			swal('Draw!', 'This game has resulted in a draw! Play another round!', 'warning');
+		});
+
+		socket.on('threeFoldDraw', function() {
+			swal('Draw!', 'You and your opponent repeated the same move 3 times rather than fighting with honor.', 'warning');
+		})
 
 	}); // end chess js
 }); // end socket startup

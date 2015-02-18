@@ -279,6 +279,33 @@ io.on('connection', function(socket) {
 	socket.on('pieceDrop', function(pieceSource, pieceTarget) {
 		io.emit('pieceDrop', pieceSource, pieceTarget);
 	});
+
+	socket.on('gameInCheck', function() {
+		socket.emit('offensiveCheck'); // player puting opponent in check
+		socket.broadcast.emit('defensiveCheck'); // player receiving 
+	});
+
+	socket.on('gameInCheckmate', function() {
+		socket.emit('offensiveCheckmate'); // player puting opponent in check
+		socket.broadcast.emit('defensiveCheckmate'); // player receiving 
+	});
+
+	socket.on('gameInDraw', function() {
+		io.emit('drawGame');
+	});
+
+	socket.on('gameInStalemate', function() {
+		socket.broadcast.emit('defensiveStalemate'); // defending player recieving stalemate
+		socket.emit('offensiveStalemate'); // offensive player puting opponent into stalemate
+	});
+
+	socket.on('gameInThreefold', function() {
+		io.emit('threeFoldDraw');
+	});
+
+
+
+
 });
 	// socket.on('disconnect', function() {
 	// 	console.log('a user disconnected');
