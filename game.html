@@ -17,7 +17,7 @@
         <!-- https://github.com/audreyr/favicon-cheat-sheet -->
 
         <!-- feature detection -->
-        <script src="dist/js/detects.js"></script>
+        <!-- <script src="dist/js/detects.js"></script> -->
         
         <!-- favicon -->
         <link rel="shortcut icon" type="image/png" href="/img/favicon.ico"/>
@@ -48,7 +48,7 @@
               <li><a href="">play</a></li>
             </ul>
         </nav>
-
+        
         <!-- <img class="logo" src="img/logo.png" alt="chess logo">
         <h1>Wanna play a game?</h1>
         
@@ -66,13 +66,13 @@
           <main id="main">
             <div id="board"></div>
             <div class="messageList">
-                <ul id="messages"></ul>
+                <ul id="messages" class="clearfix"></ul>
+                <form id="chatForm" action="">
+                    <input id="m" autocomplete="off" />
+                    <button>Send</button>
+              </form>
             </div>
             <div class="userList"></div>
-            <div class="chat">
-              <form id="chatForm" action="">
-                <input id="m" autocomplete="off" /><button>Send</button>
-              </form>
             </div>
           </main>
 

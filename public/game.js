@@ -9,7 +9,10 @@ $user = $('#user'),
 $userList = $('.userList'),
 $content = $('#main');
 
-// var playerColor;
+var playerColor;
+var gamePlayerColor;
+var boardFEN;
+var gameInProgress = false;
 
 socket.on('startSetup', function(currentPlayerColor) {
 	console.log('a user connected');
@@ -17,155 +20,152 @@ socket.on('startSetup', function(currentPlayerColor) {
 	socket.emit('setup', localStorage.getItem('username'));
 });
 
-// socket.on('endSetup', function(currentPlayerColor) {
-// 	playerColor = currentPlayerColor;
-// 	console.log(playerColor);
-// });
+socket.on('endSetup', function(currentPlayerColor, currentBoardPosition, gamePosition) {
+	gamePlayerColor = currentPlayerColor;
+	console.log('game player color: '+gamePlayerColor);
+	boardFEN = currentBoardPosition;
+
+	//setup Chess functions
+	$(function() {
+		var board,
+		boardEl = $('#board'),
+		game = new Chess(),
+		squareClass = 'square-55d63',
+	  squareToHighlight,
+	  colorToHighlight;
+
+		var removeHighlights = function(color) {
+		  boardEl.find('.square-55d63')
+		    .removeClass('highlight-' + color);
+		};
+
+		var removeGreySquares = function() {
+		  $('#board .square-55d63').css('background', '');
+		};
+
+		var greySquare = function(square) {
+		  var squareEl = $('#board .square-' + square);
+		  
+		  var background = '#a9a9a9';
+		  if (squareEl.hasClass('black-3c85d') === true) {
+		    background = '#696969';
+		  }
+
+		  squareEl.css('background-color', background);
+		};
+
+		var onDragStart = function(source, piece) {
+		  // do not pick up pieces if the game is over
+		  // or if it's not that side's turn
 
 
+		  socket.emit('getColor');
+		  socket.on('getColor', function(color) {
+		  	playerColor = color;
+		  	console.log(playerColor);
+		  });
 
-$(function() {
-	var board,
-	boardEl = $('#board'),
-	game = new Chess(),
-	 squareClass = 'square-55d63',
-  	squareToHighlight,
-  	colorToHighlight;
+		  if (game.game_over() === true || (game.turn() === 'w' && piece.search(/^b/) !== -1) ||(game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+		    return false;
+		  }
 
-  // 	socket.emit('getColor');
-	 //  socket.on('getColor', function(color) {
-	 //  	playerColor = color;
-	 //  	console.log(playerColor);
-	 // });
+		  if (playerColor === 'black' && game.turn() === 'w') { //white only moves on whites turn
+		  	return false;
+		  }
 
-	var removeHighlights = function(color) {
-	  boardEl.find('.square-55d63')
-	    .removeClass('highlight-' + color);
-	};
-
-	var removeGreySquares = function() {
-	  $('#board .square-55d63').css('background', '');
-	};
-
-	var greySquare = function(square) {
-	  var squareEl = $('#board .square-' + square);
-	  
-	  var background = '#a9a9a9';
-	  if (squareEl.hasClass('black-3c85d') === true) {
-	    background = '#696969';
-	  }
-
-	  squareEl.css('background-color', background);
-	};
-
-	var onDragStart = function(source, piece) {
-	  // do not pick up pieces if the game is over
-	  // or if it's not that side's turn
+		  if (playerColor === 'white' && game.turn() === 'b') { // black only moves on blacks turn 
+		  	//&& piece.search(/^b/) !== -1 && piece.search(/^w/)
+		  	return false;
+		  }
 
 
-	  socket.emit('getColor');
-	  socket.on('getColor', function(color) {
-	  	playerColor = color;
-	  	console.log(playerColor);
-	  });
+		};
 
-	  if (game.game_over() === true || (game.turn() === 'w' && piece.search(/^b/) !== -1) ||(game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-	    return false;
-	  }
+		var onDrop = function(source, target) {
+		  removeGreySquares();
 
-	  if (playerColor === 'black' && game.turn() === 'w') { //white only moves on whites turn
-	  	return false;
-	  }
+		  // see if the move is legal
+		  var move = game.move({
+		    from: source,
+		    to: target,
+		    promotion: 'q' // NOTE: always promote to a queen for example simplicity
+		  });
 
-	  if (playerColor === 'white' && game.turn() === 'b') { // black only moves on blacks turn 
-	  	//&& piece.search(/^b/) !== -1 && piece.search(/^w/)
-	  	return false;
-	  }
+		  // illegal move
+		  if (move === null) return 'snapback';
 
+		  socket.emit('pieceDrop', source, target);
+		  socket.on('pieceDrop', function(pieceSource, pieceTarget) {
+		  	removeHighlights('black');
+		  	removeHighlights('white');
+		  	boardEl.find('.square-' + pieceSource).addClass('highlight-white');
+		  	boardEl.find('.square-' + pieceTarget).addClass('highlight-black');
+		  });
 
-	};
+		  	// removeHighlights('black');
+			// removeHighlights('white');
+			// highlight white's move
+		  	// boardEl.find('.square-' + source).addClass('highlight-white');
+		  	// boardEl.find('.square-' + target).addClass('highlight-black');
 
-	var onDrop = function(source, target) {
-	  removeGreySquares();
+			// highlight black's move
+			// boardEl.find('.square-' + move.from).addClass('highlight-black');
+			squareToHighlight = move.to;
 
-	  // see if the move is legal
-	  var move = game.move({
-	    from: source,
-	    to: target,
-	    promotion: 'q' // NOTE: always promote to a queen for example simplicity
-	  });
+		};
 
-	  // illegal move
-	  if (move === null) return 'snapback';
+		var onMouseoverSquare = function(square, piece) {
+		  // get list of possible moves for this square
+		  var moves = game.moves({
+		    square: square,
+		    verbose: true
+		  });
 
-	  socket.emit('pieceDrop', source, target);
-	  socket.on('pieceDrop', function(pieceSource, pieceTarget) {
-	  	removeHighlights('black');
-	  	removeHighlights('white');
-	  	boardEl.find('.square-' + pieceSource).addClass('highlight-white');
-	  	boardEl.find('.square-' + pieceTarget).addClass('highlight-black');
-	  })
+		  // exit if there are no moves available for this square
+		  if (moves.length === 0) return;
 
-	  	removeHighlights('black');
-		removeHighlights('white');
-		// highlight white's move
-	  	boardEl.find('.square-' + source).addClass('highlight-white');
-	  	boardEl.find('.square-' + target).addClass('highlight-black');
+		  // highlight the square they moused over
+		  greySquare(square);
 
-		// highlight black's move
-		// boardEl.find('.square-' + move.from).addClass('highlight-black');
-		squareToHighlight = move.to;
+		  // highlight the possible squares for this piece
+		  for (var i = 0; i < moves.length; i++) {
+		    greySquare(moves[i].to);
+		  }
+		};
 
-	};
+		var onMouseoutSquare = function(square, piece) {
+		  removeGreySquares();
+		};
 
-	var onMouseoverSquare = function(square, piece) {
-	  // get list of possible moves for this square
-	  var moves = game.moves({
-	    square: square,
-	    verbose: true
-	  });
+		var onSnapEnd = function() {
+		  board.position(game.fen());
+		  console.log(board.fen());
+		  console.log(game.fen());
+		  socket.emit('chessMove', board.fen(), game.fen());
+		};
 
-	  // exit if there are no moves available for this square
-	  if (moves.length === 0) return;
+		var cfg = {
+		  draggable: true,
+		  position: boardFEN,
+		  orientation: gamePlayerColor,
+		  onDragStart: onDragStart,
+		  onDrop: onDrop,
+		  onMouseoutSquare: onMouseoutSquare,
+		  onMouseoverSquare: onMouseoverSquare,
+		  onSnapEnd: onSnapEnd
+		};
 
-	  // highlight the square they moused over
-	  greySquare(square);
+		board = new ChessBoard('board', cfg);
+		// game.load(gamePosition);
 
-	  // highlight the possible squares for this piece
-	  for (var i = 0; i < moves.length; i++) {
-	    greySquare(moves[i].to);
-	  }
-	};
+		socket.on('chessMove', function(boardPosition, gamePosition) {
+		  	board.position(boardPosition);
+		  	console.log(gamePosition);
+		  	game.load(gamePosition);
+		});
 
-	var onMouseoutSquare = function(square, piece) {
-	  removeGreySquares();
-	};
-
-	var onSnapEnd = function() {
-	  board.position(game.fen());
-	  console.log(board.fen());
-	  console.log(game.fen());
-	  socket.emit('chessMove', board.fen(), game.fen());
-	};
-
-	var cfg = {
-	  draggable: true,
-	  position: 'start',
-	  onDragStart: onDragStart,
-	  onDrop: onDrop,
-	  onMouseoutSquare: onMouseoutSquare,
-	  onMouseoverSquare: onMouseoverSquare,
-	  onSnapEnd: onSnapEnd
-	};
-
-	board = new ChessBoard('board', cfg);
-	$(window).resize(board.resize);
-	socket.on('chessMove', function(boardPosition, gamePosition){
-	  	board.position(boardPosition);
-	  	console.log(gamePosition);
-	  	game.load(gamePosition);
-	});
-}); // end chess js
+	}); // end chess js
+}); // end socket startup
 
 
 
@@ -174,6 +174,7 @@ $chat.submit(function(e){
 	e.preventDefault();
 	socket.emit('chat message', $('#m').val());
 	socket.emit('userNotTyping');
+	$('#messages').append($('<p>').addClass('me').text($('#m').val()));
 	$('#m').val('');
 	return false;
 });
@@ -188,7 +189,7 @@ $('#m').keypress($.debounce(5000, true, function(){
 
 socket.on('chat message', function(msg, userName){
 	console.log('chat message', msg, userName);
-  $('#messages').append($('<li>').text(userName+': '+msg));
+  $('#messages').append($('<p>').addClass('them').text(userName+': '+msg));
   socket.emit('scrollChat');
 });
 
@@ -214,7 +215,7 @@ socket.on('updateUsers', function(users) {
 //Send Message Function
 
 socket.on('userTyping', function(alert) {
-	$('#messages').append($('<li>').text(alert).addClass('user-typing'));
+	$('#messages').append($('<p>').text(alert).addClass('user-typing'));
 	socket.emit('scrollChat');
 });
 socket.on('userNotTyping', function() {

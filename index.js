@@ -63,6 +63,9 @@ function gamesCollection() {
 function game(id, player1, player2) {
 	this.id = id;
 	this.players = [];
+	this.boardFEN = 'start';
+	this.gameFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+	this.gameStarted = false;
 }
 
 game.prototype.addPlayer = function(user) {
@@ -97,9 +100,15 @@ gamesCollection.prototype.findGame = function(gameID) {
 	return _.find(this.games, {'id': gameID});
 };
 
-gamesCollection.prototype.findGameFromUser = function(userName) {
+gamesCollection.prototype.findGameFromUserName = function(userName) {
 	return _.find(this.games, function(game) { 
 		return _.where(game.players, {userName: userName}).length;
+	 });
+}
+
+gamesCollection.prototype.findGameFromUserId = function(id) {
+	return _.find(this.games, function(game) { 
+		return _.where(game.players, {socketId: id}).length;
 	 });
 }
 
@@ -207,56 +216,51 @@ app.get('/game/:gameID', function (req, res, next) {
 
 io.on('connection', function(socket) {
 
+
+
 	socket.emit('startSetup');
-
 	socket.on('setup', function(username){
-		console.log('socket: '+socket.id);
-		console.log(username + ' connected');
-		console.log(userList);
-		console.log(gamesCollection.games);
-
 
 		var currentUser = userList.findUser(username, 'un');
-		console.log(currentUser);
 		currentUser.socketId = socket.id;
-		console.log(userList);
-		console.log(gamesCollection.games);
-	
 
-		console.log('current user: '+currentUser.userName);
-		currentUser.socketId = socket.id;
 		console.log(currentUser.userName + 'connected');
 		console.log(userList);
-		var currentGame = gamesCollection.findGameFromUser(username);
-		console.log(currentGame);
+
+		var currentGame = gamesCollection.findGameFromUserName(username);
+		var player = currentGame.getPlayer(username);
+		player.socketId = socket.id;
+		var boardFEN = currentGame.boardFEN;
+		var gameFEN = currentGame.gameFEN;
 		var color = currentGame.getPlayerColor(username);
+
+		console.log(currentGame);
 		console.log(color);
-		// socket.(socket.id).emit('endSetup', color);
+
+		socket.emit('endSetup', color, boardFEN);
 	});
 
 	socket.on('getColor', function() {
 
 		var currentUser = userList.findUser(socket.id, 'id'); 
-		var currentGame = gamesCollection.findGameFromUser(currentUser.userName);
+		var currentGame = gamesCollection.findGameFromUserName(currentUser.userName);
 		console.log(currentGame);
 		var color = currentGame.getPlayerColor(currentUser.userName);
 		socket.emit('getColor', color);
 	});
 
-	// socket.on('join room', function ( userData, callback ) {
-	// 	var room = createID();
-	// 	socket.room = room;
-	// });
-
 	socket.on('chessMove', function(boardPosition, gamePosition) {
-		// socket.broadcast.to(socket.room).emit('chessMove', boardPosition, gamePosition);
+
+		var currentGame = gamesCollection.findGameFromUserId(socket.id);
+		currentGame.boardFEN = boardPosition;
+		currentGame.gameFEN = gamePosition;
 		io.emit('chessMove', boardPosition, gamePosition);
 		console.log(boardPosition + ' player moved');
 	});
 
 	socket.on('chat message', function(msg) {
 		var currentUser = userList.findUser(socket.id, 'id');
-		io.emit('chat message', msg, currentUser.userName);
+		socket.broadcast.emit('chat message', msg, currentUser.userName);
 		console.log(currentUser.userName+': '+msg);
 	});
 
@@ -273,73 +277,9 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('pieceDrop', function(pieceSource, pieceTarget) {
-		socket.broadcast.emit('pieceDrop', pieceSource, pieceTarget);
+		io.emit('pieceDrop', pieceSource, pieceTarget);
 	});
 });
-
-// app.use(express.static(__dirname + '/'));
-// app.listen(process.env.PORT || 3000);
-
-// io.on('connection', function(socket) {
-// 	console.log('a user connected');
-
-// 	function updateUsernames() {
-// 		socket.emit('updateUsers', users);
-// 	}
-
-// 	socket.on('join room', function ( userData, callback) {
-// 		var room = createID();
-// 		socket.room = room;
-
-
-// 			// if (games[room] && games[room].length && games[room].length <= 1) {
-// 			// 	games[room].push(socket.id);
-// 			// 	socket.join(room);
-// 			// 	users[socket.id] = userData.userName;
-// 			// 	socket.username = userData.userName
-// 			// 	console.log(users);
-// 			// 	console.log(users[socket.id], 'joined', room);
-// 			// 	updateUsernames();
-				
-// 			// 	socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
-// 			// 	// callback(true);
-			
-// 			// } else if (games[room] && games[room].length && games[room].length >= 2) {
-// 			// 	console.log('too many people in the room');
-// 			// 	callback(false);
-// 			// } else {
-// 			// 	games[room] = [];
-// 			// 	games[room].push(socket.id);
-// 			// 	socket.join(room);
-// 			// 	users[socket.id] = userData.userName;
-// 			// 	socket.username = userData.userName
-// 			// 	console.log(users);
-// 			// 	console.log(users[socket.id] + ' joined ' + room);
-// 			// 	socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
-// 			// }			
-		
-// 	});
-
-	// socket.on('updateUsers', function(usernameVal, callback){
-	// 	if (usernames.indexOf(usernameVal)!= -1) {
-	// 		console.log(usernameVal);
-	// 		console.log(users);
-	// 		callback(false);
-	// 	}
-	// 	else {
-	// 		console.log(usernameVal);
-	// 		console.log('false');
-	// 		callback(true);
-	// 		users[socket.id] = usernameVal;
-	// 		socket.username = usernameVal
-	// 		usernames.push(usernameVal);
-	// 		console.log(users);
-
-	// 		updateUsernames();
-	// 		socket.broadcast.to(socket.room).emit('userConnect', users[socket.id] +' connected');
-	// 	}
-	// });
-
 	// socket.on('disconnect', function() {
 	// 	console.log('a user disconnected');
 	// 	// if (!users[socket.id]) return;
@@ -348,31 +288,8 @@ io.on('connection', function(socket) {
 	// 	// delete users[socket.id];
 	// 	// updateUsernames();
 	// });
-	// socket.on('chat message', function(msg) {
-	// 	socket.to(socket.room).emit('chat message', msg, users[socket.id]);
-	// 	console.log(users[socket.id]+': '+msg);
-	// });
-	// socket.on('userTyping', function(){
-	// 	socket.broadcast.to(socket.room).emit('userTyping', users[socket.id] + ' is typing...');
-	// 	console.log(users[socket.id] + ' is typing...');
-	// });
-	// socket.on('userNotTyping', function(){
-	// 	socket.broadcast.to(socket.room).emit('userNotTyping');
-	// });
-	// socket.on('scrollChat', function() {
-	// 	socket.to(socket.room).emit('scrollChat');
-	// });
-	// socket.on('chessMove', function(boardPosition, gamePosition) {
-	// 	// socket.broadcast.to(socket.room).emit('chessMove', boardPosition, gamePosition);
-	// 	socket.emit('chessMove', boardPosition, gamePosition);
-	// 	console.log(boardPosition + ' player moved');
-	// });
-// });
+
 
 http.listen(3000, function(){
 	console.log('listening on *:3000');
 });
-
-// http.listen(3000/+url, function() {
-// 	console.log('new room on :3000/'+url);
-// })

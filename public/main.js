@@ -18,7 +18,7 @@ $userForm.submit(function(e){
 	console.log(newUserData);
 
 	$.post('/create', newUserData, function(userData) {
-		console.log(userData);
+		// console.log(userData);
 		if (!userData) {
 			swal('Uh-oh', 'That username is already taken, try another one!', 'error');
 		}
