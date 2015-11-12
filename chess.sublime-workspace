@@ -1,0 +1,995 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pla",
+				"playerNumber"
+			],
+			[
+				"curr",
+				"currentUser"
+			],
+			[
+				"def",
+				"defensiveCheck"
+			],
+			[
+				"board",
+				"boardFEN"
+			],
+			[
+				"findGa",
+				"findGameFromUserId"
+			],
+			[
+				"curre",
+				"currentGame"
+			],
+			[
+				"cure",
+				"currentGame"
+			],
+			[
+				"or",
+				"orientation"
+			],
+			[
+				"pie",
+				"pieceTarget"
+			],
+			[
+				"piece",
+				"pieceSource"
+			],
+			[
+				"cu",
+				"currentPlayer"
+			],
+			[
+				"get",
+				"getPlayerColor"
+			],
+			[
+				"find",
+				"findGameFromUser"
+			],
+			[
+				"current",
+				"currentUser"
+			],
+			[
+				"cur",
+				"currentUser"
+			],
+			[
+				"users",
+				"users"
+			],
+			[
+				"ad",
+				"addUser"
+			],
+			[
+				"user",
+				"userList"
+			],
+			[
+				"fin",
+				"findUser"
+			],
+			[
+				"join",
+				"joinGame"
+			],
+			[
+				"newUs",
+				"newUserColor"
+			],
+			[
+				"player2",
+				"player2userName"
+			],
+			[
+				"sera",
+				"searchedGame"
+			],
+			[
+				"unde",
+				"undefined"
+			],
+			[
+				"loc",
+				"localStorage"
+			],
+			[
+				"newU",
+				"newUserData"
+			],
+			[
+				"curren",
+				"currentUser"
+			],
+			[
+				"games",
+				"gamesCollection"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"inde",
+				"indexOf"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"fad",
+				"fadeInOut"
+			],
+			[
+				"new",
+				"newUserData"
+			],
+			[
+				"Crea",
+				"createID"
+			],
+			[
+				"create",
+				"createID"
+			],
+			[
+				"pra",
+				"params"
+			],
+			[
+				"ind",
+				"indexOf"
+			],
+			[
+				"clear",
+				"clearTimeout"
+			],
+			[
+				"mobile",
+				"mobileImage"
+			],
+			[
+				"slider",
+				"sliderButtonPosition"
+			],
+			[
+				"pos",
+				"pos-r	position: relative;"
+			],
+			[
+				"rgba",
+				"rgbaColor"
+			],
+			[
+				"regist",
+				"registrationLink"
+			],
+			[
+				"regis",
+				"registrationLink"
+			],
+			[
+				"dev",
+				"device"
+			],
+			[
+				"Re",
+				"Reward"
+			],
+			[
+				"sele",
+				"selected"
+			],
+			[
+				"nav",
+				"workshopNav"
+			],
+			[
+				"workshop",
+				"workshopNav"
+			],
+			[
+				"sl",
+				"slideToggle	.slideToggle()"
+			],
+			[
+				"open",
+				"openContent"
+			],
+			[
+				"slid",
+				"slideUp	.slideUp()"
+			],
+			[
+				"slide",
+				"slideToggle	.slideToggle()"
+			],
+			[
+				"res",
+				"resize	.resize()"
+			],
+			[
+				"works",
+				"workshopContent"
+			],
+			[
+				"animation",
+				"animationLayer"
+			],
+			[
+				"active",
+				"active-button"
+			],
+			[
+				"top",
+				"topLayer"
+			],
+			[
+				"animat",
+				"animationLayer"
+			],
+			[
+				"backgr",
+				"background-position-y"
+			],
+			[
+				"add",
+				"addClass	.addClass()"
+			],
+			[
+				"ac",
+				"active-bg"
+			],
+			[
+				"bo",
+				"bottomLayer"
+			],
+			[
+				"change",
+				"changeActive"
+			],
+			[
+				"ani",
+				"animationLayer"
+			],
+			[
+				"bottom",
+				"bottom-layer"
+			],
+			[
+				"acive",
+				"active-overlay"
+			],
+			[
+				"remove",
+				"removeClass	.removeClass()"
+			],
+			[
+				"has",
+				"hasClass	.hasClass()"
+			],
+			[
+				"from",
+				"from_email"
+			],
+			[
+				"t",
+				"to"
+			],
+			[
+				"fr",
+				"from_email"
+			],
+			[
+				"json",
+				"json_encode"
+			],
+			[
+				"ch",
+				"changeSlide"
+			],
+			[
+				"inf",
+				"infiniteLoop"
+			],
+			[
+				"owl",
+				"owl-carousel"
+			],
+			[
+				"mouseO",
+				"mouseover	.mouseover()"
+			],
+			[
+				"cont",
+				"container"
+			],
+			[
+				"va",
+				"va-m	vertical-align: middle;"
+			],
+			[
+				"ea",
+				"each	.each()"
+			],
+			[
+				"a",
+				"active"
+			],
+			[
+				"pre",
+				"preventDefault"
+			],
+			[
+				"se",
+				"selectMatt"
+			],
+			[
+				"font",
+				"font-size: "
+			],
+			[
+				"mar",
+				"margin-top: "
+			],
+			[
+				"pad",
+				"padding: "
+			],
+			[
+				"c",
+				"collapse"
+			],
+			[
+				"border-c",
+				"border-collapse: "
+			],
+			[
+				"padd",
+				"padding-left: "
+			],
+			[
+				"borde",
+				"border-radius: "
+			],
+			[
+				"bac",
+				"background-color: "
+			],
+			[
+				"margin",
+				"margin-top: "
+			],
+			[
+				"back",
+				"background-color: "
+			],
+			[
+				"arrow",
+				"arrow-rotate"
+			],
+			[
+				"toggl",
+				"toggleClass"
+			],
+			[
+				"backg",
+				"background-color: "
+			],
+			[
+				"background-s",
+				"background-size: "
+			],
+			[
+				"ma",
+				"max-width: "
+			],
+			[
+				"marg",
+				"margin-bottom: "
+			],
+			[
+				"pa",
+				"padding-top: "
+			],
+			[
+				"fon",
+				"font-style: "
+			],
+			[
+				"te",
+				"text-align: "
+			],
+			[
+				"act",
+				"active-venue"
+			],
+			[
+				"tre",
+				"transform-style: "
+			],
+			[
+				"tra",
+				"transform-origin: "
+			],
+			[
+				"eas",
+				"eastTab"
+			],
+			[
+				"sou",
+				"southTab"
+			],
+			[
+				"mid",
+				"midwestTab"
+			],
+			[
+				"west",
+				"westTab"
+			],
+			[
+				"border",
+				"border-right: "
+			],
+			[
+				"tex",
+				"text-decoration: "
+			],
+			[
+				"fu",
+				"function"
+			],
+			[
+				"base",
+				"base-font-size"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"r",
+				"rowWidth"
+			],
+			[
+				"in",
+				"inline-table"
+			],
+			[
+				"row",
+				"rowHeight"
+			],
+			[
+				"h",
+				"height"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.js",
+			"settings":
+			{
+				"buffer_size": 9079,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/game.js",
+			"settings":
+			{
+				"buffer_size": 7755,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 375.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"html",
+				"HTML: Encode Special Characters"
+			],
+			[
+				"remove pac",
+				"Package Control: Remove Package"
+			],
+			[
+				"remove",
+				"Emmet: Remove Tag"
+			],
+			[
+				"instal	",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Add Channel"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"packe",
+				"Package Control: Remove Package"
+			],
+			[
+				"set js	",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"install 	",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"disc",
+				"Package Control: Discover Packages"
+			],
+			[
+				"set css",
+				"Set Syntax: CSS"
+			]
+		],
+		"width": 947.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/chess.sublime-project",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/chess.sublime-workspace",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/index.js",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/inex.js",
+		"/Users/kevknopp/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/game.html",
+		"/Users/kevknopp/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/public/game.js",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/index.html",
+		"/Users/kevknopp/Library/Application Support/Übersicht/widgets/weathernow.widget/index.coffee",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chess/package.json",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/scss/materialize.scss",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/templates/Step2Template.html",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/package.json",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/controllers/Step3Controller.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/views/Step3BaseView.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/views/Step2BaseView.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/views/Step1BaseView.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/templates/RootTemplate.html",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/controllers/Step2Controller.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/html/index.html",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/css/materialize.css",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/DesktopCaptureApp.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/scss/main.scss",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/background.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/views/RootView.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/views/Step4BaseView.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/start.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/app.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/libs/main.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/templates/Step4Template.html",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/templates/Step1Template.html",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/js/templates/Step3Template.html",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/img/pixel_weave.png",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/dist/extension/img/icon.png",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/scss/base/_colors.scss",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/scss/base/_all.scss",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/scss/base/_type.scss",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/src/extension/scss/base/_framework.scss",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/README.md",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/gulpfile.js",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/Gemfile.lock",
+		"/Users/kevknopp/Sites/shipit/shipitday-desktop-capture/Gemfile",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chat/public/main.js",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chat/public/jquery.throttleDebounce.js",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chat/main.css",
+		"/Users/kevknopp/Sites/kevin/sideProjects/chat/main.js",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_variables.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/main.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_nav.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_slider.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_mixins.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/data.json",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_grid.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/js/libs/grapnel.js",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_hero.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_retailers.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_framework.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_specs.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_type.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/js/src/galaxyTopics.js",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/scss/_full-specs.scss",
+		"/Users/kevknopp/Sites/samsung/lp-product-s5/src/assets/js/src/template.js",
+		"/Users/kevknopp/Sites/kevin/plugins/widowKiller/widowKiller.js",
+		"/Users/kevknopp/Sites/kevin/plugins/widowKiller/index.html",
+		"/Users/kevknopp/Sites/kevin/plugins/smoothScroll/smoothScroll.js",
+		"/Users/kevknopp/Sites/samsung/galperks-content/src/assets/json/content/support.json",
+		"/Users/kevknopp/Sites/samsung/galperks-content/src/assets/json/devices.json",
+		"/Users/kevknopp/Sites/samsung/galperks-content/src/assets/json/content/apps.json",
+		"/Users/kevknopp/Sites/samsung/galperks-content/src/assets/json/content/accessories.json",
+		"/Users/kevknopp/Sites/samsung/galperks-content/src/assets/json/content/gifts.json",
+		"/Users/kevknopp/Sites/samsung/all-deals-template/Project.sublime-project",
+		"/Users/kevknopp/Sites/samsung/galperks-content/src/assets/json/apps.json",
+		"/Users/kevknopp/Sites/samsung/corporate-citizenship/src/assets/scss/_variables.scss",
+		"/Users/kevknopp/Sites/samsung/corporate-citizenship/src/index.html",
+		"/Users/kevknopp/Sites/samsung/corporate-citizenship/src/assets/scss/_landing.scss",
+		"/Users/kevknopp/Sites/samsung/skills-landing-page/src/index.html",
+		"/Users/kevknopp/Sites/samsung/skills-landing-page/src/assets/js/src/main.js",
+		"/Users/kevknopp/Sites/samsung/skills-landing-page/src/assets/scss/_mixins.scss",
+		"/Users/kevknopp/Sites/samsung/skills-landing-page/src/assets/scss/main.scss",
+		"/Users/kevknopp/Sites/samsung/skills-landing-page/src/assets/js/src/template.js",
+		"/Users/kevknopp/Sites/samsung/gs5-color-switcher/src/index.html",
+		"/Users/kevknopp/Sites/samsung/dadsgrads/src/assets/css/slick.css",
+		"/Users/kevknopp/Sites/samsung/dadsgrads/src/assets/js/libs/masonry.min.js",
+		"/Users/kevknopp/Sites/samsung/dadsgrads/src/assets/js/src/template.js",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/assets/js/src/main.js",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/index.html",
+		"/Users/kevknopp/Library/Application Support/Sublime Text 2/Packages/User/Soda Dark.sublime-theme",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/assets/scss/main.scss",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/test.html",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/test.css",
+		"/Users/kevknopp/Sites/samsung/kevin-test/us/consumer/js/main.js",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/assets/js/libs/owl.carousel.min.js",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/assets/css/owl.carousel.css",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/assets/scss/_mixins.scss",
+		"/Users/kevknopp/Sites/samsung/kevin-test/src/assets/js/owl.carousel.min.js",
+		"/Users/kevknopp/Sites/samsung/kevin-test/conf/config.rb",
+		"/etc/apache2/httpd.conf.default",
+		"/Users/kevknopp/Desktop/Side Projects/chat/css/chessboard-0.3.0.css",
+		"/Users/kevknopp/Desktop/Side Projects/chessboardjs/js/main.js",
+		"/Users/kevknopp/Desktop/Side Projects/chat/index.html",
+		"/Users/kevknopp/Desktop/Side Projects/chessboardjs/js/chess.js",
+		"/Users/kevknopp/Desktop/Side Projects/chat/index.js",
+		"/usr/local/etc/dnsmasq.conf",
+		"/Users/kevknopp/Desktop/chat/page.html",
+		"/Users/kevknopp/Desktop/chess app/main.css"
+	],
+	"find":
+	{
+		"height": 37.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			".newUser",
+			"newUser",
+			"number",
+			"boardFEN",
+			"currentBoardPosition",
+			"gamePosition",
+			"boardPosition",
+			"localStorage",
+			"newUser",
+			"9",
+			"'player",
+			"player",
+			"player moved",
+			"'",
+			"swal",
+			"scroll",
+			"chat",
+			"chatForm",
+			"absolute",
+			"posi	",
+			"gamePosition",
+			"userName",
+			"localStorage.getItem",
+			"gamePlayerColor",
+			"playerColor",
+			"PlayerColor",
+			"playerColor",
+			"game",
+			"onDragStart",
+			"resize",
+			"boardFEN",
+			"findGameFromUser",
+			"li",
+			"board",
+			"li",
+			"detects.js",
+			"getColor",
+			".findUser",
+			"getPlayerColor",
+			"submit",
+			"broadcast",
+			"userNot",
+			" T",
+			".T",
+			"T",
+			"games",
+			".players",
+			"user",
+			".addUser",
+			"addUser",
+			"userList",
+			".newUser",
+			"findUser",
+			".findUser",
+			".socket",
+			"socket.emit",
+			"$chat.submit",
+			"$chat",
+			"findUser",
+			".addUser",
+			"isFull",
+			".findGame(",
+			"findUser",
+			".joinGame",
+			".newGame",
+			"newGame",
+			"new game(",
+			"new game",
+			"Color",
+			"color",
+			"new game",
+			"games",
+			"new game",
+			"newGame",
+			"create",
+			"findGame",
+			"findUser",
+			"]",
+			".white",
+			"].white",
+			"].",
+			"{\n",
+			"gameIndex",
+			"findGame",
+			"white",
+			"send",
+			"res.send",
+			".\n",
+			"findUser",
+			"userList",
+			"d",
+			"userList",
+			"Usernames",
+			"usernames",
+			"Usernames",
+			"usernames",
+			"Usernames",
+			"usernames",
+			"join",
+			"findUser",
+			"local",
+			"localStorage",
+			"gameInfo",
+			"redirect",
+			"local",
+			"localSt",
+			"connection",
+			"newGame",
+			"findGame",
+			"localStorage",
+			"findUser",
+			", data",
+			"req.session.userName",
+			"io(",
+			"socket.id",
+			"game.js",
+			"io(",
+			"io",
+			"console.log(userList);",
+			"req.session.userName",
+			"user",
+			"newUser",
+			"session",
+			"games",
+			"newUser",
+			"newUsers",
+			"newUser",
+			"findUser"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.js",
+					"settings":
+					{
+						"buffer_size": 9079,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								424,
+								424
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai Soda.tmTheme",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "public/game.js",
+					"settings":
+					{
+						"buffer_size": 7755,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4771,
+								4771
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai Soda.tmTheme",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 3.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 66.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"kevin-test/us/consumer/js/main.js"
+			],
+			[
+				"main.js",
+				"kevin-test/us/consumer/js/main.js"
+			],
+			[
+				"main.css",
+				"src/assets/scss/main.scss"
+			],
+			[
+				"index",
+				"src/index.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 125.0,
+	"status_bar_visible": true
+}

@@ -14,9 +14,10 @@ var gamePlayerColor;
 var boardFEN;
 var gameInProgress = false;
 
-socket.on('startSetup', function(currentPlayerColor) {
+socket.on('startSetup', function() {
 	console.log('a user connected');
 	console.log( 'local storage username: '+ localStorage.getItem('username'));
+	console.log('socket id: '+socket.id);
 	socket.emit('setup', localStorage.getItem('username'));
 });
 
@@ -176,6 +177,7 @@ socket.on('endSetup', function(currentPlayerColor, currentBoardPosition, gamePos
 		};
 
 		board = new ChessBoard('board', cfg);
+		board.position(boardFEN);
 		// game.load(gamePosition);
 
 		socket.on('chessMove', function(boardPosition, gamePosition) {

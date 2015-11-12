@@ -7,6 +7,15 @@ var _ = require('lodash');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+// mongoose.connect('mongodb://localhost:27017');
+
+// var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function (callback) {
+//   // yay!
+// });
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
@@ -35,9 +44,10 @@ function userList() {
 	this.users = [];
 }
 
-function user(userName, socket) {
+function user(userName, socket, playerNumber) {
 	this.socketId = socket;
 	this.userName = userName;
+	this.playerNumber = playerNumber;
 }
 
 userList.prototype.findUser = function(identifier, token) {
@@ -51,8 +61,8 @@ userList.prototype.findUser = function(identifier, token) {
 	});
 }
 
-userList.prototype.newUser = function(username, socket) {
-	var newUser = new user(username, socket);
+userList.prototype.newUser = function(username, socket, number) {
+	var newUser = new user(username, socket, number);
 	this.users.push(newUser);
 }
 
@@ -64,7 +74,7 @@ function game(id, player1, player2) {
 	this.id = id;
 	this.players = [];
 	this.boardFEN = 'start';
-	this.gameFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+	this.gameFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'; // starting FEN
 	this.gameStarted = false;
 }
 
@@ -143,7 +153,7 @@ var userList = new userList();
 
 
 var createID = function () {
-	return Math.random().toString(36).substring(16);
+	return Math.random().toString(36).substring(2, 9);
 }
 
 app.post('/create', function(req, res) {
@@ -153,7 +163,7 @@ app.post('/create', function(req, res) {
 		res.send(false);	
 	}
 	else {
-		userList.newUser(req.body.userName); // add user to userList
+		userList.newUser(req.body.userName, undefined, 1); // add user to userList
 		var randID = createID();
 		gamesCollection.newGame(randID, 'white', req.body.userName);
 		console.log(gamesCollection);
@@ -187,7 +197,7 @@ app.post('/join', function(req,res) {
 		else {
 			var searchedGame = gamesCollection.findGame(req.body.gameId);
 			gamesCollection.joinGame(searchedGame.id, req.body.userName);
-			userList.newUser(req.body.userName, undefined);
+			userList.newUser(req.body.userName, undefined, 2);
 			console.log('joined room');
 			res.send();
 		}
@@ -216,8 +226,6 @@ app.get('/game/:gameID', function (req, res, next) {
 
 io.on('connection', function(socket) {
 
-
-
 	socket.emit('startSetup');
 	socket.on('setup', function(username){
 
@@ -242,9 +250,10 @@ io.on('connection', function(socket) {
 
 	socket.on('getColor', function() {
 
-		var currentUser = userList.findUser(socket.id, 'id'); 
+		var currentUser = userList.findUser(socket.id, 'id');
+		console.log(currentUser);
 		var currentGame = gamesCollection.findGameFromUserName(currentUser.userName);
-		console.log(currentGame);
+		console.log(currentGame.getPlayerColor(currentUser.userName));
 		var color = currentGame.getPlayerColor(currentUser.userName);
 		socket.emit('getColor', color);
 	});
@@ -317,6 +326,6 @@ io.on('connection', function(socket) {
 	// });
 
 
-http.listen(3000, function(){
+http.listen(3000, '0.0.0.0', function(){
 	console.log('listening on *:3000');
 });

@@ -24,6 +24,7 @@ $userForm.submit(function(e){
 		}
 		else  {
 			localStorage.setItem("username", newUserData.userName);
+			localStorage.setItem("username1", newUserData.userName);
 			console.log(localStorage.getItem('username'));
 			window.location ='/create';
 
@@ -47,6 +48,7 @@ $gameForm.submit(function(e) {
 	$.post('/join', newUserData, function(userData) {
 		// if post is successful redirect 
 		localStorage.setItem("username", newUserData.userName);
+		localStorage.setItem("username2", newUserData.userName);
 		window.location = '/game/' + newUserData.gameId;
 		
 	}).fail(function(xhr) {
