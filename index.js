@@ -7,8 +7,9 @@ var _ = require('lodash');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var Firebase = require("firebase");
+// var mongoose = require('mongoose');
+// var Schema = mongoose.Schema;
 // mongoose.connect('mongodb://localhost:27017');
 
 // var db = mongoose.connection;
